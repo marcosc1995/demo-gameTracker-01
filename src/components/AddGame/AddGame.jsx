@@ -40,18 +40,39 @@ export default function AddGame() {
     }
   };
 
-  // Función para guardar el juego en la categoría seleccionada
+  const checkIfGameExists = (game) => {
+    // Revisar si el juego ya existe en cualquier categoría
+    const gamesPlayed = JSON.parse(localStorage.getItem('gamesPlayed')) || [];
+    const gamesPlaying = JSON.parse(localStorage.getItem('gamesPlaying')) || [];
+    const gamesToPlay = JSON.parse(localStorage.getItem('gamesToPlay')) || [];
+
+    return (
+      gamesPlayed.some((g) => g.title === game.name) ||
+      gamesPlaying.some((g) => g.title === game.name) ||
+      gamesToPlay.some((g) => g.title === game.name)
+    );
+  };
+
   const saveGameToCategory = (game, category) => {
-    const storedGames = JSON.parse(localStorage.getItem(category)) || [];
-    const newGame = {
+    // Verificar si el juego ya existe en alguna categoría
+    if (checkIfGameExists(game)) {
+      alert('El juego ya está en una de tus listas');
+      return;
+    }
+
+    // Si no existe, agregar el juego a la categoría seleccionada
+    const gameData = {
       title: game.name,
-      imageUrl: game.background_image, // O cualquier otra propiedad que obtengas de la API
+      imageUrl: game.background_image,
     };
 
-    // Guardar el juego en localStorage
-    localStorage.setItem(category, JSON.stringify([...storedGames, newGame]));
-    alert(`Juego agregado a la categoría: ${category}`);
-    navigate("/dashboard");
+    const existingGames = JSON.parse(localStorage.getItem(category)) || [];
+    localStorage.setItem(category, JSON.stringify([...existingGames, gameData]));
+
+    alert(`Juego agregado a la categoría ${category}`);
+    
+    // Redireccionar al Dashboard
+    navigate('/dashboard');
   };
   return (
     <div>
