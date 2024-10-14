@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import "./AddGame.css";
+import "./Addgame.css";
 import { useNavigate } from "react-router-dom";
 
 export default function AddGame() {
